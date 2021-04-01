@@ -23,6 +23,11 @@ public class CertificateService implements EntityService<Certificate> {
     }
 
     @Override
+    public Collection<Certificate> readAll(int id) {
+        return certificateDAO.readAll(id);
+    }
+
+    @Override
     public Collection<Certificate> readAll() {
         return certificateDAO.readAll();
     }

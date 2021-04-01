@@ -1,6 +1,7 @@
 package com.epam.esm.entity;
 
 public abstract class Entity {
+
     private int id;
 
     public Entity() {

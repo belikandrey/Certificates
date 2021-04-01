@@ -9,8 +9,14 @@ import java.util.Collection;
 
 public interface EntityService<T extends Entity> {
     Collection<T> readAll();
+
+    Collection<T> readAll(int id);
+
     T read(int id);
+
     T create(T t) throws ValidatorException;
+
     void update(int id, T t) throws ValidatorException;
+
     void delete(int id);
 }

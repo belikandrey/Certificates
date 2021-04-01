@@ -27,6 +27,11 @@ public class TagService implements EntityService<Tag> {
     }
 
     @Override
+    public Collection<Tag> readAll(int id) {
+        return tagDao.readAll(id);
+    }
+
+    @Override
     public Tag read(int id) {
         return tagDao.read(id);
     }

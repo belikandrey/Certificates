@@ -24,6 +24,13 @@ public class TagDAO implements AbstractDAO<Tag> {
     }
 
     @Override
+    public Collection<Tag> readAll(int id) {
+        return jdbcTemplate.query("SELECT * FROM tag" +
+                " JOIN certificate_tag ON tag.id = certificate_tag.tag_id" +
+                " WHERE certificate_id=?", new BeanPropertyRowMapper<>(Tag.class), id);
+    }
+
+    @Override
     public Tag read(int id) {
         return jdbcTemplate.query("SELECT * FROM tag WHERE id = ?", new BeanPropertyRowMapper<>(Tag.class), id)
                 .stream().findAny().orElse(null);

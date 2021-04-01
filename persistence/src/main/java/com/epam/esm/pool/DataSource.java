@@ -7,9 +7,10 @@ public class DataSource {
     private static HikariConfig config = new HikariConfig("/db.properties");
     private static HikariDataSource ds = new HikariDataSource(config);
 
-    private DataSource() {}
+    private DataSource() {
+    }
 
-    public static HikariDataSource getDataSource(){
+    public static HikariDataSource getDataSource() {
         return ds;
     }
 }

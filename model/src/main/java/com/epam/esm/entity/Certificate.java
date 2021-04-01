@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Certificate extends Entity {
+
     private String name;
 
     private String description;

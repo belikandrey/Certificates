@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @ComponentScan("com.epam.esm")
 public class PersistenceSpringConfig {
     @Bean
-    public static JdbcTemplate getTemplate(){
+    public static JdbcTemplate getTemplate() {
         return new JdbcTemplate(DataSource.getDataSource());
     }
 }

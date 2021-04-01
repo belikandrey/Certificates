@@ -10,17 +10,17 @@ public class TagValidator implements Validator<Tag> {
 
     @Override
     public void validate(Tag tag) throws ValidatorException {
-        if(tag==null){
+        if (tag == null) {
             throw new ValidatorException("Tag should be not null");
         }
-        if(tag.getName()==null || tag.getName().isEmpty()){
-            throw new ValidatorException("Tag should be not empty");
+        if (tag.getName() == null || tag.getName().isEmpty()) {
+            throw new ValidatorException("Tag name should be not empty");
         }
-        if(tag.getName().length()<3){
-            throw new ValidatorException("Tag should contain at least 3 characters");
+        if (tag.getName().length() < 3) {
+            throw new ValidatorException("Tag name should contain at least 3 characters");
         }
-        if(tag.getName().length()>30){
-            throw new ValidatorException("Tag should contain not more than 30 characters");
+        if (tag.getName().length() > 30) {
+            throw new ValidatorException("Tag name should contain not more than 30 characters");
         }
     }
 }

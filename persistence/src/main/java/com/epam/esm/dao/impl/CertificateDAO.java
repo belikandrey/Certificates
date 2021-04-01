@@ -25,6 +25,12 @@ public class CertificateDAO implements AbstractDAO<Certificate> {
     }
 
     @Override
+    public Collection<Certificate> readAll(int id) {
+        return jdbcTemplate.query("SELECT * FROM certificate JOIN certificate_tag ON certificate.id = certificate_tag.certificate_id" +
+                " where certificate_tag.tag_id=?", new CertificateMapper(), id);
+    }
+
+    @Override
     public Certificate read(int id) {
         return jdbcTemplate.query("SELECT * FROM certificate WHERE id=?", new CertificateMapper(), id)
                 .stream().findAny().orElse(null);
@@ -33,16 +39,16 @@ public class CertificateDAO implements AbstractDAO<Certificate> {
     @Override
     public void create(Certificate certificate) {
         jdbcTemplate.update("INSERT INTO certificate" +
-                "(name, description, price, duration, create_date, last_update_date)" +
-                " values(?, ?, ?, ?, ?, ?)", certificate.getName(), certificate.getDescription(),
+                        "(name, description, price, duration, create_date, last_update_date)" +
+                        " values(?, ?, ?, ?, ?, ?)", certificate.getName(), certificate.getDescription(),
                 certificate.getPrice(), certificate.getDuration(), certificate.getCreateDate(), certificate.getLastUpdateDate());
     }
 
     @Override
     public void update(int id, Certificate certificate) {
         jdbcTemplate.update("UPDATE certificate SET " +
-                "name=?, description=?, price=?, duration=?, create_date=?," +
-                " last_update_date=? where id=?", certificate.getName(),
+                        "name=?, description=?, price=?, duration=?, create_date=?," +
+                        " last_update_date=? where id=?", certificate.getName(),
                 certificate.getDescription(), certificate.getPrice(),
                 certificate.getDuration(), certificate.getCreateDate(),
                 certificate.getLastUpdateDate(), id);

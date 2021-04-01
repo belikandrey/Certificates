@@ -3,7 +3,6 @@ package com.epam.esm.controller;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.exception.ValidatorException;
 import com.epam.esm.service.impl.CertificateService;
-import com.epam.esm.service.impl.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,21 +12,24 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/gift-certificates")
+@RequestMapping("/certificates")
 public class CertificateController {
 
-    private TagService tagService;
     private CertificateService certificateService;
 
     @Autowired
-    public CertificateController(TagService tagService, CertificateService certificateService) {
-        this.tagService = tagService;
+    public CertificateController(CertificateService certificateService) {
         this.certificateService = certificateService;
     }
 
     @GetMapping()
-    public ResponseEntity<?> readAll() {
-        final Collection<Certificate> giftCertificates = certificateService.readAll();
+    public ResponseEntity<?> readAll(@RequestParam(value = "tag", required = false) Integer id) {
+        Collection<Certificate> giftCertificates;
+        if (id != null) {
+            giftCertificates = certificateService.readAll(id);
+        } else {
+            giftCertificates = certificateService.readAll();
+        }
         return giftCertificates != null && !giftCertificates.isEmpty() ?
                 new ResponseEntity<>(giftCertificates, HttpStatus.OK) :
                 new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -47,7 +49,7 @@ public class CertificateController {
             certificateService.create(giftCertificate);
             return new ResponseEntity<>(giftCertificate, HttpStatus.CREATED);
         } catch (ValidatorException e) {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
@@ -63,7 +65,7 @@ public class CertificateController {
             certificateService.update(id, newCertificate);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (ValidatorException e) {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 }

@@ -2,7 +2,6 @@ package com.epam.esm.controller;
 
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.ValidatorException;
-import com.epam.esm.service.impl.CertificateService;
 import com.epam.esm.service.impl.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,17 +15,20 @@ import java.util.Collection;
 @RequestMapping("/tags")
 public class TagController {
     private final TagService tagService;
-    private final CertificateService certificateService;
 
     @Autowired
-    public TagController(TagService tagService, CertificateService certificateService) {
+    public TagController(TagService tagService) {
         this.tagService = tagService;
-        this.certificateService = certificateService;
     }
 
     @GetMapping()
-    public ResponseEntity<?> readAll() {
-        final Collection<Tag> tags = tagService.readAll();
+    public ResponseEntity<Collection<Tag>> readAll(@RequestParam(value = "certificate", required = false) Integer id) {
+        Collection<Tag> tags;
+        if (id == null) {
+            tags = tagService.readAll();
+        } else {
+            tags = tagService.readAll(id);
+        }
         return tags != null && !tags.isEmpty() ?
                 new ResponseEntity<>(tags, HttpStatus.OK) :
                 new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -46,7 +48,7 @@ public class TagController {
             tagService.create(tag);
             return new ResponseEntity<>(tag, HttpStatus.OK);
         } catch (ValidatorException e) {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
@@ -63,7 +65,7 @@ public class TagController {
             tagService.update(id, tag);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (ValidatorException e) {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 }
