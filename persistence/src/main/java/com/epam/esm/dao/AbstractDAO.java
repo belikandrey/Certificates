@@ -5,13 +5,13 @@ import com.epam.esm.entity.Entity;
 import java.util.Collection;
 
 public interface AbstractDAO<T extends Entity> {
-    Collection<T> readAll();
+    Collection<T> findAll();
 
-    Collection<T> readAll(int id);
+    Collection<T> findAll(int id);
 
-    T read(int id);
+    T find(int id);
 
-    void create(T t);
+    void add(T t);
 
     void update(int id, T t);
 

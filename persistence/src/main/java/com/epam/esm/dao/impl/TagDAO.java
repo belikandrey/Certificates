@@ -13,42 +13,49 @@ import java.util.Collection;
 public class TagDAO implements AbstractDAO<Tag> {
     private final JdbcTemplate jdbcTemplate;
 
+    private final String SQL_GET_ALL = "SELECT * FROM tag";
+    private final String SQL_GET_ALL_BY_CERTIFICATE_ID = "SELECT * FROM tag" +
+            " JOIN certificate_tag ON tag.id = certificate_tag.tag_id" +
+            " WHERE certificate_id=?";
+    private final String SQL_GET_BY_ID = "SELECT * FROM tag WHERE id = ?";
+    private final String SQL_ADD = "INSERT INTO tag() VALUE(?)";
+    private final String SQL_UPDATE = "UPDATE tag SET name = ? where id=?";
+    private final String SQL_DELETE = "DELETE FROM tag WHERE id=?";
+
     @Autowired
     public TagDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public Collection<Tag> readAll() {
-        return jdbcTemplate.query("SELECT * FROM tag", new BeanPropertyRowMapper<>(Tag.class));
+    public Collection<Tag> findAll() {
+        return jdbcTemplate.query(SQL_GET_ALL, new BeanPropertyRowMapper<>(Tag.class));
     }
 
     @Override
-    public Collection<Tag> readAll(int id) {
-        return jdbcTemplate.query("SELECT * FROM tag" +
-                " JOIN certificate_tag ON tag.id = certificate_tag.tag_id" +
-                " WHERE certificate_id=?", new BeanPropertyRowMapper<>(Tag.class), id);
+    public Collection<Tag> findAll(int id) {
+        return jdbcTemplate.query(SQL_GET_ALL_BY_CERTIFICATE_ID, new BeanPropertyRowMapper<>(Tag.class), id);
     }
 
     @Override
-    public Tag read(int id) {
-        return jdbcTemplate.query("SELECT * FROM tag WHERE id = ?", new BeanPropertyRowMapper<>(Tag.class), id)
+    public Tag find(int id) {
+        return jdbcTemplate.query(SQL_GET_BY_ID, new BeanPropertyRowMapper<>(Tag.class), id)
                 .stream().findAny().orElse(null);
 
     }
 
     @Override
-    public void create(Tag tag) {
-        jdbcTemplate.update("INSERT INTO tag() VALUE(?)", tag.getName());
+    public void add(Tag tag) {
+        jdbcTemplate.update(SQL_ADD, tag.getName());
     }
 
     @Override
     public void update(int id, Tag tag) {
-        jdbcTemplate.update("UPDATE tag SET name = ? where id=?", tag.getName(), id);
+        jdbcTemplate.update(SQL_UPDATE, tag.getName(), id);
     }
 
     @Override
     public void delete(int id) {
-        jdbcTemplate.update("DELETE FROM tag WHERE id=?", id);
+        jdbcTemplate.update(SQL_DELETE, id);
     }
 }

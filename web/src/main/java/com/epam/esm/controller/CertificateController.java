@@ -23,12 +23,12 @@ public class CertificateController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> readAll(@RequestParam(value = "tag", required = false) Integer id) {
+    public ResponseEntity<?> findAll(@RequestParam(value = "tag", required = false) Integer id) {
         Collection<Certificate> giftCertificates;
         if (id != null) {
-            giftCertificates = certificateService.readAll(id);
+            giftCertificates = certificateService.findAll(id);
         } else {
-            giftCertificates = certificateService.readAll();
+            giftCertificates = certificateService.findAll();
         }
         return giftCertificates != null && !giftCertificates.isEmpty() ?
                 new ResponseEntity<>(giftCertificates, HttpStatus.OK) :
@@ -36,8 +36,8 @@ public class CertificateController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> read(@PathVariable("id") int id) {
-        final Certificate certificate = certificateService.read(id);
+    public ResponseEntity<?> find(@PathVariable("id") int id) {
+        final Certificate certificate = certificateService.find(id);
         return certificate != null ?
                 new ResponseEntity<>(certificate, HttpStatus.OK) :
                 new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -46,7 +46,7 @@ public class CertificateController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> create(@RequestBody Certificate giftCertificate) {
         try {
-            certificateService.create(giftCertificate);
+            certificateService.add(giftCertificate);
             return new ResponseEntity<>(giftCertificate, HttpStatus.CREATED);
         } catch (ValidatorException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);

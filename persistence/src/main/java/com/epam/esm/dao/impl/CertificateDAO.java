@@ -13,6 +13,20 @@ import java.util.Collection;
 public class CertificateDAO implements AbstractDAO<Certificate> {
     private final JdbcTemplate jdbcTemplate;
 
+    private final String SQL_GET_ALL = "SELECT * FROM certificate";
+    private final String SQL_GET_ALL_BY_TAG_ID = "SELECT * FROM certificate JOIN certificate_tag ON " +
+            "certificate.id = certificate_tag.certificate_id" +
+            " where certificate_tag.tag_id=?";
+    private final String SQL_GET_BY_ID = "SELECT * FROM certificate WHERE id=?";
+    private final String SQL_ADD = "INSERT INTO certificate" +
+            "(name, description, price, duration, create_date, last_update_date)" +
+            " values(?, ?, ?, ?, ?, ?)";
+    private final String SQL_UPDATE = "UPDATE certificate SET " +
+            "name=?, description=?, price=?, duration=?, create_date=?," +
+            " last_update_date=? where id=?";
+    private final String SQL_DELETE = "DELETE FROM certificate WHERE id=?";
+
+
     @Autowired
     public CertificateDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -20,35 +34,30 @@ public class CertificateDAO implements AbstractDAO<Certificate> {
 
 
     @Override
-    public Collection<Certificate> readAll() {
-        return jdbcTemplate.query("SELECT * FROM certificate", new CertificateMapper());
+    public Collection<Certificate> findAll() {
+        return jdbcTemplate.query(SQL_GET_ALL, new CertificateMapper());
     }
 
     @Override
-    public Collection<Certificate> readAll(int id) {
-        return jdbcTemplate.query("SELECT * FROM certificate JOIN certificate_tag ON certificate.id = certificate_tag.certificate_id" +
-                " where certificate_tag.tag_id=?", new CertificateMapper(), id);
+    public Collection<Certificate> findAll(int id) {
+        return jdbcTemplate.query(SQL_GET_ALL_BY_TAG_ID, new CertificateMapper(), id);
     }
 
     @Override
-    public Certificate read(int id) {
-        return jdbcTemplate.query("SELECT * FROM certificate WHERE id=?", new CertificateMapper(), id)
+    public Certificate find(int id) {
+        return jdbcTemplate.query(SQL_GET_BY_ID, new CertificateMapper(), id)
                 .stream().findAny().orElse(null);
     }
 
     @Override
-    public void create(Certificate certificate) {
-        jdbcTemplate.update("INSERT INTO certificate" +
-                        "(name, description, price, duration, create_date, last_update_date)" +
-                        " values(?, ?, ?, ?, ?, ?)", certificate.getName(), certificate.getDescription(),
+    public void add(Certificate certificate) {
+        jdbcTemplate.update(SQL_ADD, certificate.getName(), certificate.getDescription(),
                 certificate.getPrice(), certificate.getDuration(), certificate.getCreateDate(), certificate.getLastUpdateDate());
     }
 
     @Override
     public void update(int id, Certificate certificate) {
-        jdbcTemplate.update("UPDATE certificate SET " +
-                        "name=?, description=?, price=?, duration=?, create_date=?," +
-                        " last_update_date=? where id=?", certificate.getName(),
+        jdbcTemplate.update(SQL_UPDATE, certificate.getName(),
                 certificate.getDescription(), certificate.getPrice(),
                 certificate.getDuration(), certificate.getCreateDate(),
                 certificate.getLastUpdateDate(), id);
@@ -56,6 +65,6 @@ public class CertificateDAO implements AbstractDAO<Certificate> {
 
     @Override
     public void delete(int id) {
-        jdbcTemplate.update("DELETE FROM certificate WHERE id=?", id);
+        jdbcTemplate.update(SQL_DELETE, id);
     }
 }

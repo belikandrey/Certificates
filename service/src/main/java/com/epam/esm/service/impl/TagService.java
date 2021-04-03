@@ -22,24 +22,24 @@ public class TagService implements EntityService<Tag> {
     }
 
     @Override
-    public Collection<Tag> readAll() {
-        return tagDao.readAll();
+    public Collection<Tag> findAll() {
+        return tagDao.findAll();
     }
 
     @Override
-    public Collection<Tag> readAll(int id) {
-        return tagDao.readAll(id);
+    public Collection<Tag> findAll(int id) {
+        return tagDao.findAll(id);
     }
 
     @Override
-    public Tag read(int id) {
-        return tagDao.read(id);
+    public Tag find(int id) {
+        return tagDao.find(id);
     }
 
     @Override
-    public Tag create(Tag tag) throws ValidatorException {
+    public Tag add(Tag tag) throws ValidatorException {
         validator.validate(tag);
-        tagDao.create(tag);
+        tagDao.add(tag);
         return tag;
     }
 

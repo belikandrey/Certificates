@@ -8,13 +8,13 @@ import com.epam.esm.exception.ValidatorException;
 import java.util.Collection;
 
 public interface EntityService<T extends Entity> {
-    Collection<T> readAll();
+    Collection<T> findAll();
 
-    Collection<T> readAll(int id);
+    Collection<T> findAll(int id);
 
-    T read(int id);
+    T find(int id);
 
-    T create(T t) throws ValidatorException;
+    T add(T t) throws ValidatorException;
 
     void update(int id, T t) throws ValidatorException;
 

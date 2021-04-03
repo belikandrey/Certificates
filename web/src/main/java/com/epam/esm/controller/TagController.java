@@ -22,12 +22,12 @@ public class TagController {
     }
 
     @GetMapping()
-    public ResponseEntity<Collection<Tag>> readAll(@RequestParam(value = "certificate", required = false) Integer id) {
+    public ResponseEntity<Collection<Tag>> findAll(@RequestParam(value = "certificate", required = false) Integer id) {
         Collection<Tag> tags;
         if (id == null) {
-            tags = tagService.readAll();
+            tags = tagService.findAll();
         } else {
-            tags = tagService.readAll(id);
+            tags = tagService.findAll(id);
         }
         return tags != null && !tags.isEmpty() ?
                 new ResponseEntity<>(tags, HttpStatus.OK) :
@@ -35,8 +35,8 @@ public class TagController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> read(@PathVariable("id") int id) {
-        final Tag tag = tagService.read(id);
+    public ResponseEntity<?> find(@PathVariable("id") int id) {
+        final Tag tag = tagService.find(id);
         return tag != null && tag.getName() != null ?
                 new ResponseEntity<>(tag, HttpStatus.OK) :
                 new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -45,7 +45,7 @@ public class TagController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> create(@RequestBody Tag tag) {
         try {
-            tagService.create(tag);
+            tagService.add(tag);
             return new ResponseEntity<>(tag, HttpStatus.OK);
         } catch (ValidatorException e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY);

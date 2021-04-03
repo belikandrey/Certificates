@@ -23,26 +23,26 @@ public class CertificateService implements EntityService<Certificate> {
     }
 
     @Override
-    public Collection<Certificate> readAll(int id) {
-        return certificateDAO.readAll(id);
+    public Collection<Certificate> findAll(int id) {
+        return certificateDAO.findAll(id);
     }
 
     @Override
-    public Collection<Certificate> readAll() {
-        return certificateDAO.readAll();
+    public Collection<Certificate> findAll() {
+        return certificateDAO.findAll();
     }
 
     @Override
-    public Certificate read(int id) {
-        return certificateDAO.read(id);
+    public Certificate find(int id) {
+        return certificateDAO.find(id);
     }
 
     @Override
-    public Certificate create(Certificate giftCertificate) throws ValidatorException {
+    public Certificate add(Certificate giftCertificate) throws ValidatorException {
         giftCertificate.setCreateDate(LocalDateTime.now());
         giftCertificate.setLastUpdateDate(LocalDateTime.now());
         validator.validate(giftCertificate);
-        certificateDAO.create(giftCertificate);
+        certificateDAO.add(giftCertificate);
         return giftCertificate;
     }
 
